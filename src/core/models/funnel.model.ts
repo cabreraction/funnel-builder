@@ -61,8 +61,8 @@ export type TPricingOption = {
 
 export type TPricingComponent = {
   title: string;
-  options: any[];
   features: string[];
+  options: TPricingOption[];
 };
 
 export type TFunnelComponent = {

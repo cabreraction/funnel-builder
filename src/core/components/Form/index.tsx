@@ -4,18 +4,21 @@ import { Button, Card, Label, TextInput, Textarea } from "flowbite-react";
 // internal modules
 import { TForm, TFormField } from "@/core/models/funnel.model";
 
+interface DynamicFormProps {
+  id: string;
+  position: number;
+  formConfig: TForm;
+}
+
 export function DynamicForm({ 
   id,
   position, 
   formConfig 
-}: {
-  id: string; 
-  position: number;
-  formConfig: TForm
-}) {
-  const handleSubmit = (e: any) => {
+}: DynamicFormProps) {
+  
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
-    const formData = new FormData(e.target);
+    // const formData = new FormData(e.target);
     /* fetch(formConfig.actionUrl, {
       method: "POST",
       body: formData,

@@ -1,10 +1,12 @@
 // external dependencies
 import * as contentful from 'contentful'
 import { Geist, Geist_Mono } from "next/font/google";
-import {GetServerSidePropsContext, GetServerSidePropsResult} from 'next';
+import { GetServerSidePropsResult, GetServerSidePropsContext } from 'next';
 
 // internal modules
 import { FunnelBuilder } from "@/features/funnel-builder";
+import { TFunnelComponent } from '@/core/models/funnel.model';
+import { TContentfulFunnel } from '@/core/models/funnel.contentful.model';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -18,7 +20,7 @@ const geistMono = Geist_Mono({
 
 export async function getServerSideProps({resolvedUrl}: GetServerSidePropsContext): 
 Promise<
-  GetServerSidePropsResult<any>
+  GetServerSidePropsResult<{ funnel: TContentfulFunnel } | { notFound: true }>
 >  {
   const client = contentful.createClient({
     space: process.env.CONTENTFUL_SPACE_ID!,
@@ -33,9 +35,9 @@ Promise<
 
   const funnelUrl = resolvedUrl.replace('/', '');
   const funnel = res.items
-    .filter((entry: any) => entry.sys.contentType.sys.id === 'funnel')
-    .map((entry: any) => entry.fields)
-    .find((entry: any) => entry.title === funnelUrl);  
+    .filter((entry) => entry.sys.contentType.sys.id === 'funnel')
+    .map((entry) => entry.fields)
+    .find((entry) => entry.title === funnelUrl);  
 
   if (!funnel) {
     return {
@@ -45,12 +47,19 @@ Promise<
 
   return {
     props: {
-      funnel: funnel,
+      funnel: funnel as TContentfulFunnel,
     }
   }
 }
 
-export default function Funnel({funnel}: any) {
+interface FunnelProps {
+  funnel: {
+    brand: string;
+    funnelconfig: TFunnelComponent[];
+  };
+}
+
+export default function Funnel({ funnel }: FunnelProps) {
   const { brand, funnelconfig } = funnel;
   return (
     <div

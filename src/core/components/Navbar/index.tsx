@@ -1,5 +1,5 @@
 // external dependencies
-import Link from "next/link";
+// import Link from "next/link";
 import { Navbar as FBNavbar } from "flowbite-react";
 
 export type TComponentMeta = {
@@ -16,7 +16,7 @@ export function Navbar({brand, components}: {brand: string; components: TCompone
       <FBNavbar.Toggle />
       <FBNavbar.Collapse>
         {components.map((component) => (
-            <FBNavbar.Link href={`#${component.id}`} className="text-white">
+            <FBNavbar.Link key={component.id} href={`#${component.id}`} className="text-white">
               {component.displayTitle}
             </FBNavbar.Link>
           ))}
